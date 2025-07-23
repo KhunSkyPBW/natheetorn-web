@@ -96,6 +96,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { error: error.message };
     }
 
+    // Note: Profile will be created automatically by the auth state change listener
+    console.log('User signed up successfully');
     return {};
   };
 
