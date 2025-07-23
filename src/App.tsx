@@ -10,6 +10,7 @@ import ProductDetails from './components/ProductDetails';
 import AdminDashboard from './components/AdminDashboard';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
+import Checkout from './pages/Checkout';
 
 // ✅ Import halaman seller
 import SellerProducts from './pages/seller/SellerProducts';
@@ -32,6 +33,7 @@ function App() {
               } />
               <Route path="/product/:id" element={<ProductDetails />} />
               <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/checkout" element={<Checkout />} />
 
               {/* ✅ Seller Routes */}
               <Route path="/seller" element={<SellerProducts />} />
