@@ -10,12 +10,8 @@ import ProductDetails from './components/ProductDetails';
 import AdminDashboard from './components/AdminDashboard';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
-import SellerProducts from './pages/seller/SellerProducts';
-import AddProduct from './pages/seller/AddProduct';
-import EditProduct from './pages/seller/EditProduct';
 
-
-// ✅ Tambahkan import halaman seller
+// ✅ Import halaman seller
 import SellerProducts from './pages/seller/SellerProducts';
 import AddProduct from './pages/seller/AddProduct';
 import EditProduct from './pages/seller/EditProduct';
@@ -37,7 +33,7 @@ function App() {
               <Route path="/product/:id" element={<ProductDetails />} />
               <Route path="/admin" element={<AdminDashboard />} />
 
-              {/* ✅ Tambahkan route seller */}
+              {/* ✅ Seller Routes */}
               <Route path="/seller" element={<SellerProducts />} />
               <Route path="/seller/add" element={<AddProduct />} />
               <Route path="/seller/edit/:id" element={<EditProduct />} />
