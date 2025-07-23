@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase, hasSupabaseConfig, Product, Category } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import OrdersTable from './OrdersTable';
+import OrdersTable from './OrdersTable';
 
 const AdminDashboard = () => {
   const { user } = useAuth();
