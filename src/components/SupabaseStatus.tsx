@@ -1,13 +1,19 @@
 import React from 'react';
-import { Database, AlertCircle, CheckCircle } from 'lucide-react';
+import { AlertCircle, CheckCircle } from 'lucide-react';
 import { hasSupabaseConfig } from '../lib/supabase';
+import { useAuth } from '../context/AuthContext';
 
 const SupabaseStatus = () => {
+  const { user } = useAuth();
+
   if (hasSupabaseConfig) {
     return (
-      <div className="fixed bottom-4 right-4 bg-green-900/80 backdrop-blur-sm border border-green-500/30 rounded-lg p-3 flex items-center space-x-2 text-green-300">
+      <div className="fixed bottom-4 right-4 bg-green-900/80 backdrop-blur-sm border border-green-500/30 rounded-lg p-3 text-green-300">
         <CheckCircle className="h-4 w-4" />
-        <span className="text-sm">Supabase Connected</span>
+        <div className="text-sm">
+          <div>✅ Supabase Connected</div>
+          {user && <div>👤 Signed in as: {user.email}</div>}
+        </div>
       </div>
     );
   }

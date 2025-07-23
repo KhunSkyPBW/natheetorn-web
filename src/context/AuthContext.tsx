@@ -44,7 +44,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('Auth state change:', event, session?.user?.id);
+        
         if (session?.user) {
+          // Create profile if it doesn't exist
+          const { error: profileError } = await supabase
+            .from('profiles')
+            .upsert({
+              id: session.user.id,
+              email: session.user.email || '',
+              full_name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || '',
+              is_seller: true // Make all users sellers for demo
+            }, {
+              onConflict: 'id'
+            });
+
+          if (profileError) {
+            console.error('Profile creation error:', profileError);
+          } else {
+            console.log('Profile created/updated successfully');
+          }
+
           setUser({
             id: session.user.id,
             email: session.user.email || '',
