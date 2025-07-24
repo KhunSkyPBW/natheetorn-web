@@ -1,52 +1,65 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { supabase } from '../../lib/supabase';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const AddProduct = () => {
   const { user } = useAuth();
-  const [name, setName] = useState('');
-  const [price, setPrice] = useState<number>(0);
-  const [imageFile, setImageFile] = useState<File | null>(null);
   const navigate = useNavigate();
+  const [name, setName] = useState('');
+  const [price, setPrice] = useState('');
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !imageFile) return;
 
-    // Upload gambar ke Supabase Storage
-    const { data: uploadData, error: uploadError } = await supabase.storage
+    setUploading(true);
+    const fileExt = imageFile.name.split('.').pop();
+    const filePath = `${Date.now()}-${user.id}.${fileExt}`;
+
+    const { error: uploadError } = await supabase.storage
       .from('product-images')
-      .upload(`${user.id}/${Date.now()}_${imageFile.name}`, imageFile);
+      .upload(filePath, imageFile);
 
     if (uploadError) {
-      console.error(uploadError);
+      alert('Upload gagal');
+      setUploading(false);
       return;
     }
 
-    const imageUrl = supabase.storage
+    const { data: publicUrlData } = supabase.storage
       .from('product-images')
-      .getPublicUrl(uploadData.path).data.publicUrl;
+      .getPublicUrl(filePath);
 
-    // Simpan ke database
     const { error } = await supabase.from('products').insert({
       name,
-      price,
-      image: imageUrl,
-      user_id: user.id,
+      price: parseFloat(price),
+      image: publicUrlData.publicUrl,
+      seller_id: user.id,
     });
 
-    if (!error) navigate('/seller');
+    setUploading(false);
+    if (!error) {
+      navigate('/seller');
+    } else {
+      alert('Gagal tambah produk');
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 space-y-4">
-      <h1 className="text-xl font-bold">Tambah Produk</h1>
-      <input type="text" placeholder="Nama Produk" value={name} onChange={e => setName(e.target.value)} className="border p-2 w-full" />
-      <input type="number" placeholder="Harga" value={price} onChange={e => setPrice(Number(e.target.value))} className="border p-2 w-full" />
-      <input type="file" accept="image/*" onChange={e => setImageFile(e.target.files?.[0] || null)} />
-      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Simpan</button>
-    </form>
+    <div className="max-w-xl mx-auto py-10 text-white">
+      <h2 className="text-2xl font-bold mb-4">Tambah Produk</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input type="text" placeholder="Nama Produk" value={name} onChange={(e) => setName(e.target.value)} className="w-full p-2 rounded bg-slate-800" required />
+        <input type="number" placeholder="Harga" value={price} onChange={(e) => setPrice(e.target.value)} className="w-full p-2 rounded bg-slate-800" required />
+        <input type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files?.[0] || null)} className="text-white" required />
+        <button type="submit" disabled={uploading} className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700">
+          {uploading ? 'Mengupload...' : 'Tambah Produk'}
+        </button>
+      </form>
+    </div>
   );
 };
 
