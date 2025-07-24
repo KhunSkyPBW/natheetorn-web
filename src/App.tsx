@@ -18,6 +18,9 @@ import SellerProducts from './pages/seller/SellerProducts';
 import AddProduct from './pages/seller/AddProduct';
 import EditProduct from './pages/seller/EditProduct';
 
+// ✅ Ubah Password
+import ChangePassword from './pages/ChangePassword';
+
 function App() {
   return (
     <AuthProvider>
@@ -42,6 +45,7 @@ function App() {
 
               {/* Admin */}
               <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/change-password" element={<ChangePassword />} />
 
               {/* Checkout */}
               <Route path="/checkout" element={<Checkout />} />
