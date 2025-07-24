@@ -7,4 +7,12 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
+  build: {
+    outDir: 'dist', // ✅ untuk Netlify
+  },
+  server: {
+    fs: {
+      allow: ['.'],
+    },
+  },
 });
