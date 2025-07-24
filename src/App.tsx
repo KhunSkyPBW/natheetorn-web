@@ -12,7 +12,8 @@ import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
 import Checkout from './pages/Checkout';
 
-// ✅ Import halaman seller
+// ✅ Seller Pages
+import SellerDashboard from './pages/seller/SellerDashboard';
 import SellerProducts from './pages/seller/SellerProducts';
 import AddProduct from './pages/seller/AddProduct';
 import EditProduct from './pages/seller/EditProduct';
@@ -25,21 +26,50 @@ function App() {
           <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
             <Header />
             <Routes>
-              <Route path="/" element={
-                <>
-                  <Hero />
-                  <ProductGrid />
-                </>
-              } />
+              {/* Home */}
+              <Route
+                path="/"
+                element={
+                  <>
+                    <Hero />
+                    <ProductGrid />
+                  </>
+                }
+              />
+
+              {/* Product Detail */}
               <Route path="/product/:id" element={<ProductDetails />} />
+
+              {/* Admin */}
               <Route path="/admin" element={<AdminDashboard />} />
+
+              {/* Checkout */}
               <Route path="/checkout" element={<Checkout />} />
 
-              {/* ✅ Seller Routes */}
-              <Route path="/seller" element={<SellerProducts />} />
-              <Route path="/seller/add" element={<AddProduct />} />
-              <Route path="/seller/edit/:id" element={<EditProduct />} />
+              {/* ✅ Seller Dashboard Nested Routes */}
+              <Route path="/seller" element={<SellerDashboard />}>
+                <Route
+                  index
+                  element={
+                    <div className="text-center text-gray-400 mt-10">
+                      Dashboard Overview coming soon...
+                    </div>
+                  }
+                />
+                <Route path="products" element={<SellerProducts />} />
+                <Route path="add" element={<AddProduct />} />
+                <Route path="edit/:id" element={<EditProduct />} />
+                <Route
+                  path="orders"
+                  element={
+                    <div className="text-center text-gray-400 mt-10">
+                      Orders management coming soon...
+                    </div>
+                  }
+                />
+              </Route>
             </Routes>
+
             <Footer />
             <AuthModal />
             <CartModal />
